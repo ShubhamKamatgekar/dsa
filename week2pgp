@@ -164,6 +164,44 @@ public:
 };
 
 
+7. Array Duplicates
+Given an array arr[] of size n, containing elements from the range 1 to n, and each element appears at most twice, return an array of all the integers that appears twice.
+
+Note: You can return the elements in any order but the driver code will print them in sorted order.
+
+Examples:
+
+Input: arr[] = [2, 3, 1, 2, 3]
+Output: [2, 3] 
+Explanation: 2 and 3 occur more than once in the given array.
+Input: arr[] = [3, 1, 2] 
+Output: []
+Explanation: There is no repeating element in the array, so the output is empty.
+Constraints:
+1 ≤ n ≤ 106
+1 ≤ arr[i] ≤ n
+Expected Complexities
+Time Complexity: O(n)
+Auxiliary Space: O(1)
+
+//as all elemnts in an array of size n are in range 1 to n. We can negate the value of arr[arr[i]] to mark tht arr[i] is visited 
+//next again when we find same value as arr[i] then when we check if arr[arr[i]] is -ve (<0) then we can say ar[i] is duplicate
+//it might be possible that arr[i] itself was marked as -ve for some other number so we always check with abs val i.e arr[abs(arr[i])-1] coz 0 to n-1 range so -1
+vector<int> findDuplicates(vector<int>& arr) {
+     vector<int> result;
+     
+     for (int i=0; i<arr.size(); i++) {
+         if (arr[abs(arr[i])-1] > 0) {
+             arr[abs(arr[i])-1] = -arr[abs(arr[i])-1];
+         } else {
+             result.push_back(abs(arr[i]));
+         }
+     }
+     
+     return result;
+ }
+    
+
 15. Find K-th Smallest Pair Distance:
 -------------------------------------
 The distance of a pair of integers a and b is defined as the absolute difference between a and b.
