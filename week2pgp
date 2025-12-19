@@ -250,6 +250,87 @@ public:
     }
 };
 
+9. Kth smallest element in the array using constant space when array can't be modified
+Given an integer array arr[] and an integer k, your task is to find and return the kth smallest element in the given array.
+
+Examples :
+
+Input: arr[] = [10, 5, 4, 3, 48, 6, 2, 33, 53, 10], k = 4
+Output: 5
+Explanation: 4th smallest element in the given array is 5.
+Input: arr[] = [7, 10, 4, 3, 20, 15], k = 3
+Output: 7
+Explanation: 3rd smallest element in the given array is 7.
+Constraints:
+1 ≤ arr.size() ≤ 105
+1 ≤ arr[i] ≤ 105
+1 ≤ k ≤  arr.size() 
+
+class Solution {
+  public:
+    /*
+    int kthSmallest(vector<int> &arr, int k) {
+        // code here
+        priority_queue<int, vector<int>, greater<int>> minH;
+        for (int i=0; i<arr.size(); i++) {
+            minH.push(arr[i]);
+        }
+        
+        for (int i=0; i<k-1; i++) {
+            minH.pop();
+        }
+        
+        int ans = minH.top();
+        minH.pop();
+        return ans;
+    }
+    */
+    
+    int getk(vector<int> &arr, int k, int n, int bar) {
+        int maxi = -1;
+        //cout<<"bar: "<<bar<<endl;
+        for (int i=0; i<n; i++) {
+            if (arr[i] <= bar) {
+                maxi = max(arr[i], maxi);
+                k--;
+                if (k==0) {
+                    return maxi;
+                }
+            }
+        }
+        return -1;
+    }
+    
+    int kthSmallest(vector<int> &arr, int k) {
+        int low = *min_element(arr.begin(), arr.end());
+        int n = arr.size();
+        int high = *max_element(arr.begin(), arr.end());
+        while(low <= high) {
+            int mid = (low+high) / 2;
+            int countless = 0;
+            int countequal = 0;
+            
+            for (int i=0; i<n; i++) {
+                if (arr[i] < mid) {
+                    countless++;
+                } else if (arr[i] == mid) {
+                    countequal++;
+                }
+            }
+            
+            if (countless >= k) {
+                high = mid-1;
+            } else if (countless <k && countless+countequal >= k) {
+                return mid;
+            } else if (countless<k && countless+countequal < k) {
+                low = mid+1;
+            }
+        }
+        
+        return low-1;
+    }
+};
+
 
 
 15. Find K-th Smallest Pair Distance:
