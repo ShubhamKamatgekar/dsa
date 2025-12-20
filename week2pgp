@@ -708,4 +708,57 @@ void segregateEvenOdd(vector<int>& arr) {
       sort(arr.begin()+i, arr.end());
   }
 
+21. Kth Smallest Number in Multiplication Table
+-----------------------------------------------
+Nearly everyone has used the Multiplication Table. The multiplication table of size m x n is an integer matrix mat where mat[i][j] == i * j (1-indexed).
+Given three integers m, n, and k, return the kth smallest element in the m x n multiplication table.
+
+Example 1:
+Input: m = 3, n = 3, k = 5
+1 2 3 
+2 4 6
+3 6 9
+
+sorted: 1 2 2 3 3 4 6 6 9
+Output: 3
+Explanation: The 5th smallest number is 3.
+
+Input: m = 2, n = 3, k = 6
+1 2 3
+2 4 6
+Output: 6
+Explanation: The 6th smallest number is 6.
+
+Constraints:
+1 <= m, n <= 3 * 104
+1 <= k <= m * n
+
+bool check(int m, int n, int k, int mid) {
+        int count = 0;
+        int j = n;
+        for (int i=1; i<=m; i++) {
+           // while (j>0 && (i*j > mid)) j--;
+            count += min(mid/i, n);
+            //j=n;
+        }
+        return (count >= k);
+    }
+
+    int findKthNumber(int m, int n, int k) {
+        int low = 1;
+        int high = m*n;
+        int ans = 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (check(m, n, k, mid)) {
+                ans = mid;
+                high = mid-1;
+            } else {
+                low = mid+1;
+            }
+        }
+
+        return ans;
+    }
+
 
