@@ -536,6 +536,167 @@ class Solution {
     }
 };
 
+13.  Search a 2D Matrix II:
+---------------------------
+Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
+
+Integers in each row are sorted in ascending from left to right.
+Integers in each column are sorted in ascending from top to bottom.
+Example 1: 
+Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5
+Output: true
+Example 2:
+Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20
+Output: false
+ 
+
+Constraints:
+
+m == matrix.length
+n == matrix[i].length
+1 <= n, m <= 300
+-109 <= matrix[i][j] <= 109
+All the integers in each row are sorted in ascending order.
+All the integers in each column are sorted in ascending order.
+-109 <= target <= 109
+
+class Solution {
+public:
+    bool check(vector<vector<int>>& matrix, int row, int n, int target) {
+        int low = 0;
+        int high = n-1;
+        
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (matrix[row][mid] == target) {
+                return true;
+            }
+
+            if (matrix[row][mid] > target) {
+                high = mid-1;
+            } else {
+                low = mid+1;
+            }
+        }
+
+        return false;
+    }
+
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int m = matrix.size();
+        int n = matrix[0].size();
+
+        for (int i=0; i<m; i++) {
+            if (target >= matrix[i][0] && target <= matrix[i][n-1]) {
+                if (check(matrix, i, n, target)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+};
+
+14. Ugly Number III:
+----------------------
+An ugly number is a positive integer that is divisible by a, b, or c.
+Given four integers n, a, b, and c, return the nth ugly number.
+
+Example 1:
+Input: n = 3, a = 2, b = 3, c = 5
+Output: 4
+Explanation: The ugly numbers are 2, 3, 4, 5, 6, 8, 9, 10... The 3rd is 4.
+Example 2:
+
+Input: n = 4, a = 2, b = 3, c = 4
+Output: 6
+Explanation: The ugly numbers are 2, 3, 4, 6, 8, 9, 10, 12... The 4th is 6.
+Example 3:
+
+Input: n = 5, a = 2, b = 11, c = 13
+Output: 10
+Explanation: The ugly numbers are 2, 4, 6, 8, 10, 11, 12, 13... The 5th is 10.
+ 
+Constraints:
+
+1 <= n, a, b, c <= 109
+1 <= a * b * c <= 1018
+It is guaranteed that the result will be in range [1, 2 * 109].
+
+class Solution {
+public:
+    long long gcd(int a, int b) {
+        if (a==0) return b;
+        if (b==0) return a;
+        if (a>b) a = a-b;
+        else b = b-a;
+        return gcd(a, b);
+    }
+
+    long long lcm(int a, int b) {
+        return ((a) / gcd(a, b)) * b;
+    }
+
+    int nthUglyNumber(int n, int a, int b, int c) {
+        int low = min(min(a, b), c);
+        int high = 2e9;
+        long long ans = low;
+
+        long long ab = lcm(a, b);
+        long long bc = lcm(b, c);
+        long long ac = lcm(a, c);
+        long long abc = lcm(lcm(a, b), c);
+        while(low <= high) {
+            int mid = (low) + (high-low) / 2;
+            //ele div by a might also be div by b and c so we need to exclude those count.
+            //for this we use inclusin - exclusion principle a+b+c-(anb)-(bnc)-(anc) + (anbnb) //a or b or c
+            //for this we need to sub all possible numbers div by both a and b so  lcm(a, b) similarly those div by both b, c i. e by lcm(b,c), lcm(a,c) and add num div by lcm(a, b, c).
+            long long cnt = ((mid/a))  - (mid/ab) - (mid/bc) - (mid/ac) + (mid/b) + (mid/c) + (mid/abc);
+            if (cnt>=n) {
+                ans = mid;
+                high = mid-1;
+            } else {
+                low = mid+1;
+            }
+        }
+
+        return ans;
+    }
+
+/*
+    int countUgly(int m, int n, int s, int a, int b, int c) {
+        int count = 0;
+        cout<<"here "<<endl;
+        for (int i=s; i<=m; i++) {
+            if (i%a == 0 || i%b == 0 || i%c == 0) {
+                count++;
+                if (count == n) return i;
+            }
+        }
+
+        return -1;
+    }
+    int nthUglyNumber(int n, int a, int b, int c) {
+        int s = min(min(a, b), c);
+        int low = s;
+        int high = 2e9;
+
+        while(low < high) {
+            int mid = (low + high) / 2;
+            int cnt = countUgly(mid, n, s, a, b, b);
+            if (cnt != -1) return cnt;
+            // if (cnt > n) {
+            //     high = mid-1;
+            // } else {
+                low = mid+1;
+            // }
+        }
+
+        return -1;
+    }
+    */
+};
 
 
 15. Find K-th Smallest Pair Distance:
