@@ -761,4 +761,61 @@ bool check(int m, int n, int k, int mid) {
         return ans;
     }
 
+23. Nth Magical Number:
+-------------------------
+A positive integer is magical if it is divisible by either a or b.
+Given the three integers n, a, and b, return the nth magical number. Since the answer may be very large, return it modulo 109 + 7.
 
+
+Example 1:
+Input: n = 1, a = 2, b = 3
+Output: 2
+Example 2:
+
+Input: n = 4, a = 2, b = 3
+Output: 6
+ 
+Constraints:
+
+1 <= n <= 109
+2 <= a, b <= 4 * 104
+
+class Solution {
+public:
+    int gcd(int a, int b) {
+        if (a==0) return b;
+        if (b==0) return a;
+        if (b>a) {
+            b=b-a;
+        } else {
+            a=a-b;
+        }
+        return gcd(a,b);
+    }
+
+    long long lcm(int a, int b) {
+        return (a*b)/gcd(a, b);
+    }
+
+    int nthMagicalNumber(int n, int a, int b) {
+        long long high = 1LL * n * min(a, b);
+        long long lm= lcm(a, b);
+
+        int lim = 1e9 + 7;
+        if (a==b) return (1LL * (a % lim) * (n % lim)) % lim;
+        long long low = min(a, b);
+        long long ans = 0;
+        
+        while(low <= high) {
+            long long mid = low + (high - low) / 2;
+            long long c = mid / a + mid / b - mid / lm;
+            if (c<n) {
+                low = mid+1;
+            } else {
+                ans = mid;
+                high=mid-1;
+            }
+        }
+        return ans%lim;
+    }
+};
