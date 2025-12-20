@@ -735,11 +735,11 @@ Constraints:
 
 bool check(int m, int n, int k, int mid) {
         int count = 0;
-        int j = n;
+        //int j = n;
         for (int i=1; i<=m; i++) {
            // while (j>0 && (i*j > mid)) j--;
-            count += min(mid/i, n);
             //j=n;
+           count += min(mid/i, n);
         }
         return (count >= k);
     }
