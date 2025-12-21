@@ -324,3 +324,47 @@ public:
         return true;
     }
 };
+
+
+8. Valid Anagram:
+-----------------
+Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+
+Example 1:
+Input: s = "anagram", t = "nagaram"
+Output: true
+
+Example 2:
+Input: s = "rat", t = "car"
+Output: false
+
+Constraints:
+1 <= s.length, t.length <= 5 * 104
+s and t consist of lowercase English letters.
+ 
+Follow up: What if the inputs contain Unicode characters? How would you adapt your solution to such a case?
+
+func isAnagram(s string, t string) bool {
+    if (len(s) != len(t)) {
+        return false
+    }
+    sm := make([]int, 256)
+   // tm := make([]int, 256)
+
+    for i:=0; i< len(s); i++ {
+        sm[s[i]]++
+       // tm[t[i]]++
+    }
+    for i:=0; i< len(t); i++ {
+        sm[t[i]]--
+       // tm[t[i]]++
+    }
+    for i:=0; i< 256; i++ {
+        //if sm[i] != tm[i] {
+        if sm[i] != 0 {
+            return false
+        }
+    }
+
+    return true
+}
