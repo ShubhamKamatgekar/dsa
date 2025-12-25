@@ -543,3 +543,67 @@ bool checkInclusion(string s1, string s2) {
 
         return false;
     }
+
+17. Majority Element II:
+-----------------------
+Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times.
+
+Example 1:
+
+Input: nums = [3,2,3]
+Output: [3]
+Example 2:
+
+Input: nums = [1]
+Output: [1]
+Example 3:
+
+Input: nums = [1,2]
+Output: [1,2]
+ 
+Constraints:
+
+1 <= nums.length <= 5 * 104
+-109 <= nums[i] <= 109
+
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        int n = nums.size();
+        if (n==1) return nums;
+        
+        int a = 0;
+        int b = 0;
+        int ac = 0;
+        int bc = 0;
+        for (auto i: nums) {
+            if (a==i)  {
+                ac++;
+            } else if (b==i) {
+                bc++;
+            } else if (ac==0) {
+                a=i;
+                ac++;
+            } else if (bc==0) {
+                b=i;
+                bc++;
+            } else {
+                ac--;
+                bc--;
+            }
+        }
+
+        vector<int> ans;
+        ac = 0;
+        bc = 0;
+        for (auto k: nums) {
+            if (k==a) ac++;
+            else if (k==b) bc++;
+        }
+        if (ac > (n/3)) ans.push_back(a);
+        if (bc > (n/3)) ans.push_back(b);
+
+        return ans;
+    }
+};
+ 
