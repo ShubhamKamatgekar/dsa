@@ -296,3 +296,61 @@ public:
         return res;
     }
 };
+
+10. Power Set:
+--------------
+Given a string s of length n, find all the possible non-empty subsequences of the string s in lexicographically-sorted order.
+
+Example 1:
+Input : 
+s = "abc"
+Output: 
+a ab abc ac b bc c
+Explanation : 
+There are a total 7 number of subsequences possible for the given string, and they are mentioned above in lexicographically sorted order.
+
+Example 2:
+Input: 
+s = "aa"
+Output: 
+a a aa
+Explanation : 
+There are a total 3 number of subsequences possible for the given string, and they are mentioned above in lexicographically sorted order.
+Your Task:
+You don't need to read input or print anything. Your task is to complete the function AllPossibleStrings() which takes a string s as the input parameter and returns a list of all possible subsequences (non-empty) that can be formed from s in lexicographically sorted order.
+
+Expected Time Complexity: O( n*2n  )
+Expected Space Complexity: O( n * 2n )
+
+Constraints: 
+1 <= n <= 16
+s constitutes of lower case english alphabets
+
+Company Tags:Snapdeal
+
+class Solution {
+  public:
+    void lexo(int i, int n, string &sub, string s, vector<string> &res) {
+        if (sub.size() == n) {
+            //res.push_back(sub);
+            return;
+        }
+        
+        for (; i<n; i++) {
+            sub.push_back(s[i]);
+            res.push_back(sub);
+            lexo(i+1, n, sub, s, res);
+            sub.pop_back();
+        }
+    }
+    
+    vector<string> AllPossibleStrings(string s) {
+        // Code here
+        vector<string> res;
+        string sub = "";
+        int n = s.size();
+        lexo(0, n, sub, s, res);
+        sort(res.begin(), res.end());
+        return res;
+    }
+};
