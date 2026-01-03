@@ -130,3 +130,67 @@ class Solution {
     }
 };
 
+
+6. Pow(x, n):
+-------------
+Implement pow(x, n), which calculates x raised to the power n (i.e., xn).
+
+Example 1:
+Input: x = 2.00000, n = 10
+Output: 1024.00000
+
+Example 2:
+Input: x = 2.10000, n = 3
+Output: 9.26100
+
+Example 3:
+Input: x = 2.00000, n = -2
+Output: 0.25000
+Explanation: 2-2 = 1/22 = 1/4 = 0.25
+ 
+
+Constraints:
+
+-100.0 < x < 100.0
+-231 <= n <= 231-1
+n is an integer.
+Either x is not zero or n > 0.
+-104 <= xn <= 104
+
+Approach
+We will recursively call the Pow function until it boils down to n==1 or n==-1
+In case of n as negative we need to divide x by itself so in the case when n is -1 we will return 1/x and for n==1 we will return x
+In order to further make it more efficient we will further divide n by 2 to make it efficient. Why this works, check below.
+we can write 2 pow 10 as (2 pow 5) * (2 pow 5)
+2^10 = 1024
+2^10 = 2^5 * 2^5 (32 * 32= 1024)
+Now, we can further write 2^5 as 2 * 2^2 * 2^2
+ans, 2^2 as 2^1 * 2^1
+Now in the recursion when n==1 we hit the base case return x
+So in recursive call we will solve for n/2 and get the result
+--if n is even return res*res
+--if n is odd return x * res * res for (n>0) else 1/x * res * res if n is negative
+
+class Solution {
+public:
+    double Pow(double x, int n, bool neg) {
+        if (n==1) return x;
+        if (n==-1) return 1/x;
+        double res = Pow(x, n/2, neg);
+        return (n%2 == 0) ?  res*res : ((neg == true) ? 1/x * res*res : x *res * res);
+    }
+
+    double myPow(double x, int n) {
+        if (n==0) return 1;
+        if (n==1) return x;
+        if (n==-1) return 1/x;
+        bool neg  = false;
+        if (n < 0) neg = true;
+        if (neg == false && x == 1.00000) {
+            return x;
+        }
+        
+        double res = Pow(x, n/2, neg);
+        return (n%2 == 0) ?  res*res : ((neg == true) ? 1/x * res*res : x *res * res);
+    }
+};
