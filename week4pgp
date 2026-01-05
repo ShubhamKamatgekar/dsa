@@ -528,3 +528,97 @@ int main() {
     }
     return 0;
 }
+
+
+18.Non-Crossing Handshakes (Catalan Problem) — Short Notes
+🔹 Problem
+
+N people (N must be even) stand in a circle
+
+Each person shakes hands exactly once
+
+No two handshakes cross
+
+Find number of possible handshake arrangements
+
+🔹 Key Rules
+
+Each handshake uses 2 people
+
+Odd N ⇒ 0 ways
+
+Handshakes are chords inside a circle
+
+Chords must not intersect
+
+🔹 Core Idea
+
+Fix person 1
+
+Person 1 can shake with:
+
+2, 4, 6, ..., N
+
+
+That handshake splits the circle into:
+
+Left group
+
+Right group
+
+Both groups are independent
+
+Count ways recursively
+
+🔹 Recurrence Relation
+
+Let f(n) = number of valid arrangements
+
+f(0) = 1
+f(2) = 1
+f(n) = Σ f(i - 2) × f(n - i)
+        for i = 2, 4, ..., n
+
+🔹 Example (n = 6)
+f(6) = f(0)*f(4) + f(2)*f(2) + f(4)*f(0)
+     = 1*2 + 1*1 + 2*1
+     = 5
+
+🔹 Why Multiplication?
+
+Left and right sides are independent
+
+Total ways = left × right
+
+🔹 Why Addition?
+
+Each partner choice is a different case
+
+Sum all valid cases
+
+🔹 Relation to Catalan Numbers
+
+If N = 2k:
+
+Answer = Catalan(k)
+
+
+Same problem as:
+
+Balanced parentheses
+
+BST counting
+
+Polygon triangulation
+
+🔹 Recursive Code (Core Logic)
+long long handshake(int n) {
+    if (n == 0 || n == 2) return 1;
+    if (n % 2 == 1) return 0;
+
+    long long ways = 0;
+    for (int i = 2; i <= n; i += 2) {
+        ways += handshake(i - 2) * handshake(n - i);
+    }
+    return ways;
+}
