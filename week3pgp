@@ -788,6 +788,7 @@ bool checkInclusion(string s1, string s2) {
         for (auto c:s1) ms1[c-'a']++;
 
         vector<int> ms2(26, 0);
+//use sliding window from i to j and check if this window matches any permby comparing the freq else dec ith freq in m2 and check for next window.
         int i=0;
         int j=0;
         while (j<n2) {
