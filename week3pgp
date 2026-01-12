@@ -1333,6 +1333,109 @@ public:
     }
 };
 
+29. Permutation Sequence:
+----------------------------
+The set [1, 2, 3, ..., n] contains a total of n! unique permutations.
+
+By listing and labeling all of the permutations in order, we get the following sequence for n = 3:
+
+"123"
+"132"
+"213"
+"231"
+"312"
+"321"
+Given n and k, return the kth permutation sequence.
+
+Example 1:
+Input: n = 3, k = 3
+Output: "213"
+
+Example 2:
+Input: n = 4, k = 9
+Output: "2314"
+
+Example 3:
+Input: n = 3, k = 1
+Output: "123"
+ 
+Constraints:
+1 <= n <= 9
+1 <= k <= n!
+
+class Solution {
+public:
+/*
+   // int ct;
+    void getPerm(int i, int n, string &val, int k, unordered_set<string> &res) {
+        // if (k==0) {
+        //     return;
+        // }
+        if (i==n) {
+            res.insert(val);
+           // ct--;
+            return;
+        }
+
+        //if (ct == 0) return;
+        for (int j=i; j<n; j++) {
+            //if (i!=j) {
+                swap(val[i], val[j]);
+                //cout<<"val "<< val<<" k "<<k<<endl;
+                // res.insert(val);
+                getPerm(i+1, n, val, k-1, res);
+                swap(val[i], val[j]);
+            //}
+        }
+    }
+
+    string getPermutation(int n, int k) {
+        string val = "";
+        for (int i=1; i<=n; i++) {
+            val.push_back(i+'0');
+        }
+    //    ct=k;
+        unordered_set<string> res;
+        res.insert(val);
+        getPerm(0, n, val, k, res);
+        
+        vector<string> ans(res.begin(), res.end());
+        sort(ans.begin(), ans.end());
+        for (int i=0; i<ans.size(); i++) {
+            cout<<ans[i]<<endl;
+        }
+        return ans[k-1];
+    }
+
+*/
+
+    string getPermutation(int n, int k) {
+        vector<int> nums;
+        int fact = 1;
+        for (int i=1;i<n; i++) {
+            fact = fact*i; //fact for n 1 less because a particular pos can be filled wit (n-1) ! ways
+            nums.push_back(i);
+        }
+
+        nums.push_back(n);
+        k = k-1; //0 based indicing
+        string ans = "";
+        while (true) {
+            int num = nums[k/fact];
+            ans.push_back('0' + num);
+            nums.erase(nums.begin()+(k/fact));
+
+            n = nums.size();
+            if (n==0) break;
+
+            k=k%fact;
+            fact = fact/n;
+        }
+
+        return ans;
+    }
+};
+
 
 30. Maximum Gap:
 -------------------
