@@ -934,6 +934,50 @@ All the integers in nums appear only once except for precisely one integer which
     }
 
 
+20. Maximum Product Subarray:
+-----------------------------
+Given an integer array nums, find a subarray that has the largest product, and return the product.
+The test cases are generated so that the answer will fit in a 32-bit integer.
+Note that the product of an array with a single element is the value of that element.
+
+Example 1:
+Input: nums = [2,3,-2,4]
+Output: 6
+Explanation: [2,3] has the largest product 6.
+
+Example 2:
+Input: nums = [-2,0,-1]
+Output: 0
+Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+ 
+Constraints:
+1 <= nums.length <= 2 * 104
+-10 <= nums[i] <= 10
+The product of any subarray of nums is guaranteed to fit in a 32-bit integer.
+
+(this is a max, min usage problem pattern)
+int maxProduct(vector<int>& nums) {
+        int maxi = nums[0];
+        int maxSofar = nums[0];
+        int minSofar = nums[0];
+        int getmaxsf = INT_MIN;
+        int getminsf = INT_MAX;
+        //int prod = 1;
+        for (int i=1; i<nums.size(); i++) {
+            //prod = prod*nums[i];
+            getmaxsf = maxSofar;
+            getminsf = minSofar;
+            maxSofar = max(nums[i], max(nums[i]*getmaxsf, nums[i]*getminsf));
+            minSofar = min(nums[i], min(nums[i]*getminsf, nums[i]*getmaxsf));
+            maxi = max(maxi, max(maxSofar, minSofar));
+        }
+
+        return maxi;
+    }
+
+
+
+
 23. Rearrange Array Alternately:
 ---------------------------------
 Given an array of positive integers. Your task is to rearrange the array elements alternatively i.e. first element should be the max value, the second should be the min value, the third should be the second max, the fourth should be the second min, and so on.
