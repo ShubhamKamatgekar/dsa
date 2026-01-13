@@ -418,6 +418,67 @@ public:
 };
 
 
+13.  Predict the Winner:
+-------------------------
+You are given an integer array nums. Two players are playing a game with this array: player 1 and player 2.
+Player 1 and player 2 take turns, with player 1 starting first. Both players start the game with a score of 0. At each turn, the player takes one of the numbers from either end of the array (i.e., nums[0] or nums[nums.length - 1]) which reduces the size of the array by 1. The player adds the chosen number to their score. The game ends when there are no more elements in the array.
+
+Return true if Player 1 can win the game. If the scores of both players are equal, then player 1 is still the winner, and you should also return true. You may assume that both players are playing optimally.
+
+Example 1:
+Input: nums = [1,5,2]
+Output: false
+Explanation: Initially, player 1 can choose between 1 and 2. 
+If he chooses 2 (or 1), then player 2 can choose from 1 (or 2) and 5. If player 2 chooses 5, then player 1 will be left with 1 (or 2). 
+So, final score of player 1 is 1 + 2 = 3, and player 2 is 5. 
+Hence, player 1 will never be the winner and you need to return false.
+
+Example 2:
+Input: nums = [1,5,233,7]
+Output: true
+Explanation: Player 1 first chooses 1. Then player 2 has to choose between 5 and 7. No matter which number player 2 choose, player 1 can choose 233.
+Finally, player 1 has more score (234) than player 2 (12), so you need to return True representing player1 can win.
+ 
+Constraints:
+1 <= nums.length <= 20
+0 <= nums[i] <= 107
+
+(if you choose a no i then you will either win/loose by nums[i] - f(i+1, j)(other player can choose from this))
+(13-1-26 2hrs medium lvl)
+/*
+     int calc(int i, int j, vector<int>& nums) {
+        if (i == j) {
+            return nums[i];
+        }
+
+        int left = nums[i] - calc(i+1, j, nums);
+        int right = nums[j] - calc(i, j-1, nums);
+        return max(left, right);
+    }
+*/
+
+    int calc(int i, int j, vector<int>& nums, vector<vector<int>> &dp) {
+        if (i == j) {
+            return nums[i]; //if only one num left return it
+        }
+
+        if (dp[i][j]!= 0) {
+            return dp[i][j];
+        }
+
+        int left = nums[i] - calc(i+1, j, nums, dp);//u pick i then  other playe can pick from nums[i+1:j] so you will either win/loose by nums[i] - (f(i+1, j))
+        int right = nums[j] - calc(i, j-1, nums, dp);//u pick j then  other playe can pick from nums[i:j-1] so you will either win/loose by nums[j] - f(i, j-1)
+        return dp[i][j] = max(left, right);
+    }
+
+    bool predictTheWinner(vector<int>& nums) {
+        int n = nums.size();
+       // return calc(0, n-1, nums) >= 0;
+       vector<vector<int>> dp(n+1, vector<int>(n+1, 0));
+       return calc(0, n-1, nums, dp)>=0; //if val -ve u loose by the other player by - points else win or tie
+    }
+
+
 17. Bracket Challenge:
 ------------------------
 Vivek has taught the question on printing all the valid balanced parentheses sequences given N pairs of parentheses in the webinar on recursion.
@@ -528,6 +589,69 @@ int main() {
     }
     return 0;
 }
+
+
+14. Count Good Numbers:
+------------------------
+A digit string is good if the digits (0-indexed) at even indices are even and the digits at odd indices are prime (2, 3, 5, or 7).
+
+For example, "2582" is good because the digits (2 and 8) at even positions are even and the digits (5 and 2) at odd positions are prime. However, "3245" is not good because 3 is at an even index but is not even.
+Given an integer n, return the total number of good digit strings of length n. Since the answer may be large, return it modulo 109 + 7.
+
+A digit string is a string consisting of digits 0 through 9 that may contain leading zeros.
+
+Example 1:
+Input: n = 1
+Output: 5
+Explanation: The good numbers of length 1 are "0", "2", "4", "6", "8".
+
+Example 2:
+Input: n = 4
+Output: 400
+
+Example 3:
+Input: n = 50
+Output: 564908303
+ 
+Constraints:
+1 <= n <= 1015
+
+int mod = 1e9 + 7;
+
+    long long comp(long long num, long long i) {
+        if (i==0) return 1;
+
+        long long val = comp(num, i/2);
+        return (i%2==0) ? (val%mod) * (val%mod) : num * (val%mod) * (val%mod);
+    }
+
+    int countGoodNumbers(long long n) {
+        long long count = 1;
+       
+       // countGood(0, n, count);
+    //    for (long long i=0; i<n; i++) {
+    //     if (i%2==0) {
+    //         count = ((count % mod) * 5)%mod;
+    //     } else {
+    //         count =  ((count % mod) * 4)% mod;
+    //     }
+    //    }
+
+        long long ce = 0;
+        long long co = 0;
+        
+        ce = (n+1) / 2;
+        co = n/2;
+        long long countevn = comp(5, ce/2);
+        long long totevn = (ce % 2 == 0) ? (countevn % mod) * (countevn % mod) : 5 * (countevn % mod) * (countevn % mod);
+        
+        long long countodd = comp(4, co/2);
+        long long totodd = (co % 2 == 0) ? (countodd % mod) * (countodd % mod) : 4 * (countodd % mod) * (countodd % mod);
+
+        count = ((totevn % mod) * (totodd % mod)) % mod;
+        return count;
+    }
+
 
 
 18.Non-Crossing Handshakes (Catalan Problem) — Short Notes
