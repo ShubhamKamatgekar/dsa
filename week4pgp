@@ -504,41 +504,43 @@ Output: 564908303
 Constraints:
 1 <= n <= 1015
 
-int mod = 1e9 + 7;
+//Given len n there can be (n+1)/2 even places & n/2 odd places. Each even place can be filled with 5 even nos(0,2,4,6,8) and odd places by 4 prime nos(2,3,5,7) so the count of good nos will be product of possibilites of odd/even at each place i.e pow(5, ne) ne- even places out of n * pow(4, no) no-odd places out of n places. So recursively we can solve for power(5, ne/2) and power(4, no/2) return 5or4 * ans*ans for ne or no odd or ans*ans
 
-    long long comp(long long num, long long i) {
-        if (i==0) return 1;
+   int mod = 1e9 + 7;
 
-        long long val = comp(num, i/2);
-        return (i%2==0) ? (val%mod) * (val%mod) : num * (val%mod) * (val%mod);
-    }
+   long long comp(long long num, long long i) {
+       if (i==0) return 1;
 
-    int countGoodNumbers(long long n) {
-        long long count = 1;
+       long long val = comp(num, i/2);
+       return (i%2==0) ? (val%mod) * (val%mod) : num * (val%mod) * (val%mod);
+   }
+
+   int countGoodNumbers(long long n) {
+       long long count = 1;
+      
+      // countGood(0, n, count);
+   //    for (long long i=0; i<n; i++) {
+   //     if (i%2==0) {
+   //         count = ((count % mod) * 5)%mod;
+   //     } else {
+   //         count =  ((count % mod) * 4)% mod;
+   //     }
+   //    }
+
+       long long ce = 0;
+       long long co = 0;
+      
+       ce = (n+1) / 2;
+       co = n/2;
+       long long countevn = comp(5, ce/2);
+       long long totevn = (ce % 2 == 0) ? (countevn % mod) * (countevn % mod) : 5 * (countevn % mod) * (countevn % mod);
        
-       // countGood(0, n, count);
-    //    for (long long i=0; i<n; i++) {
-    //     if (i%2==0) {
-    //         count = ((count % mod) * 5)%mod;
-    //     } else {
-    //         count =  ((count % mod) * 4)% mod;
-    //     }
-    //    }
+       long long countodd = comp(4, co/2);
+       long long totodd = (co % 2 == 0) ? (countodd % mod) * (countodd % mod) : 4 * (countodd % mod) * (countodd % mod);
 
-        long long ce = 0;
-        long long co = 0;
-       
-        ce = (n+1) / 2;
-        co = n/2;
-        long long countevn = comp(5, ce/2);
-        long long totevn = (ce % 2 == 0) ? (countevn % mod) * (countevn % mod) : 5 * (countevn % mod) * (countevn % mod);
-        
-        long long countodd = comp(4, co/2);
-        long long totodd = (co % 2 == 0) ? (countodd % mod) * (countodd % mod) : 4 * (countodd % mod) * (countodd % mod);
-
-        count = ((totevn % mod) * (totodd % mod)) % mod;
-        return count;
-    }
+       count = ((totevn % mod) * (totodd % mod)) % mod;
+       return count;
+   }
 
 
 
@@ -593,6 +595,49 @@ bool check(int i, string s, vector<string>&mp, vector<int>& dp) {
         string curr = "";
         vector<int> dp(s.size()+1, -1);
         return check(0, s, wordDict, dp);
+    }
+
+
+16. Subsets II:
+---------------
+Given an integer array nums that may contain duplicates, return all possible subsets (the power set).
+
+The solution set must not contain duplicate subsets. Return the solution in any order. 
+
+Example 1:
+Input: nums = [1,2,2]
+Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
+
+Example 2:
+Input: nums = [0]
+Output: [[],[0]]
+ 
+Constraints:
+1 <= nums.length <= 10
+-10 <= nums[i] <= 10
+
+//include excude with pop element in backtrack pattern
+void subset(set<vector<int>> &res, int i, vector<int> &curr, vector<int>& nums) {
+        if (i == nums.size()){
+            res.insert(curr);
+            return;
+        } 
+
+        subset(res, i+1, curr, nums);
+        curr.push_back(nums[i]);
+        subset(res, i+1, curr, nums);
+        curr.pop_back();
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        set<vector<int>> res;
+        vector<int> curr;
+        sort(nums.begin(), nums.end());
+        subset(res, 0, curr, nums);
+        vector<vector<int>> fin(res.begin(), res.end());
+        
+       // sort(fin.begin(), fin.end());
+        return fin;
     }
 
 
