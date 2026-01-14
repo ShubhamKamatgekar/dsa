@@ -653,6 +653,183 @@ int mod = 1e9 + 7;
     }
 
 
+16. Subsets II:
+------------------
+Given an integer array nums that may contain duplicates, return all possible subsets (the power set).
+The solution set must not contain duplicate subsets. Return the solution in any order.
+
+Example 1:
+Input: nums = [1,2,2]
+Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
+
+Example 2:
+Input: nums = [0]
+Output: [[],[0]]
+ 
+Constraints:
+1 <= nums.length <= 10
+-10 <= nums[i] <= 10
+
+   void subset(set<vector<int>> &res, int i, vector<int> &curr, vector<int>& nums) {
+        if (i == nums.size()){
+            res.insert(curr);
+            return;
+        } 
+
+        subset(res, i+1, curr, nums);
+        curr.push_back(nums[i]);
+        subset(res, i+1, curr, nums);
+        curr.pop_back();
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        set<vector<int>> res;
+        vector<int> curr;
+        sort(nums.begin(), nums.end());
+        subset(res, 0, curr, nums);
+        vector<vector<int>> fin(res.begin(), res.end());
+        
+       // sort(fin.begin(), fin.end());
+        return fin;
+    }
+/*
+//beats 100%
+    vector<vector<int>> ans;
+    vector<int> path;
+
+    void dfs(int idx, vector<int>& nums) {
+        ans.push_back(path);
+
+        for (int i = idx; i < nums.size(); i++) {
+            // skip duplicates
+            if (i > idx && nums[i] == nums[i - 1]) continue;
+
+            path.push_back(nums[i]);
+            dfs(i + 1, nums);
+            path.pop_back();
+        }
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        dfs(0, nums);
+        return ans;
+    }
+    */
+
+
+
+17. Bracket Challenge:
+-----------------------
+Vivek has taught the question on printing all the valid balanced parentheses sequences given N pairs of parentheses in the webinar on recursion.
+
+He wants to test his students, so, he asks them a similar related question. He asks them to print all the valid balanced bracket sequence given N pairs of parantheses () and M pairs of braces {}.
+
+Can you solve this variation of his problem?
+
+Remember a balanced parentheses has following properties:
+
+For any type of bracket (parentheses/brace), the number of opening and closing brackets should be equal. The following are invalid: (){}} ({({})}
+For any type of bracket, and any index of the string, the number of opening bracket before that index should be greater or equal to the number of closing brackets. The following are invalid: ()}{ ({}))(
+For any two matching pairs of different types of brackets, it should not happen that one type of bracket has opening before the opening of other bracket but has closing after the second type of closing. This is invalid: {(}) but these are valid: {()} ({}).
+Input Format
+
+The first line of input consists of two integers, N and M, which denote the number of parentheses and the number of braces pair.
+
+Constraints
+
+1 <= N + M <= 10
+
+Output Format
+
+Output all the valid balanced bracket sequences for given number of parantheses and braces pairs, one in each newline.
+
+Sample Input 0
+
+1 2
+Sample Output 0
+
+(){}{}
+{}(){}
+{}{}()
+(){{}}
+{{}}()
+{}{()}
+{}({})
+{()}{}
+({}){}
+(){{}}
+{{}}()
+{{()}}
+{({})}
+({{}})
+({}{})
+{(){}}
+{{}()}
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <stack>
+using namespace std;
+
+//st stack stores the open braces/paranthesis only, this is to prevent any false closing if open brace/paranthesis present at top of stack matches to the close brace/paranthesis we are trying to close only then close brac/paranthesis
+void balanced(int open_n, int close_n, int open_m, int close_m, vector<string> &res, string &curr, stack<char> &st) {
+    if (open_n == 0 && close_n == 0 && 0 == open_m && 0 == close_m) {
+        res.push_back(curr);
+        return;
+    }
+    
+    if (open_n > 0) {
+        st.push('(');
+        curr.push_back('(');
+        balanced(open_n-1, close_n, open_m, close_m, res, curr, st);
+        st.pop();
+        curr.pop_back();
+    }
+    
+    if (close_n >0 && close_n > open_n && st.top() == '(') {
+        st.pop();  //as top has '(' and we are going to close it pop the '(' else it will cause inconsistency
+        curr.push_back(')');
+        balanced(open_n, close_n-1, open_m, close_m, res, curr, st);
+        st.push('('); //push back '(' to stack as we will try other options
+        curr.pop_back();
+    }
+    
+    if (open_m > 0) {
+        st.push('{');
+        curr.push_back('{');
+        balanced(open_n, close_n, open_m-1, close_m, res, curr, st);
+        st.pop();
+        curr.pop_back();
+    }
+    
+    if (close_m >0 && close_m > open_m && st.top() == '{') {
+        st.pop(); as top has '{' and we are going to close '}' it pop the '{' else it will cause inconsistency
+        curr.push_back('}');
+        balanced(open_n, close_n, open_m, close_m-1, res, curr, st);
+        st.push('{'); //push back '{' to stack as we will try other options
+        curr.pop_back();
+    }
+}
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    int n;
+    int m;
+    cin>>n>>m;
+    vector<string> res;
+    string curr ="";
+    stack<char> st;
+    balanced(n, n, m, m, res, curr, st);
+    for (auto s: res) {
+        cout<<s<<endl;
+    }
+    return 0;
+}
+
 
 18.Non-Crossing Handshakes (Catalan Problem) — Short Notes
 🔹 Problem
