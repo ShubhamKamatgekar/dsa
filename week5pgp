@@ -113,3 +113,67 @@ Let the sum of all points be total_pts. You need to remove a sub-array from card
 Hint 2
 Keep a window of size n - k over the array. The answer is max(answer, total_pts - sumOfCurrentWindow)
 //if yu are choosing k elements from the ends of the array u will be left with n-k elements at the center. So the max score will be max of totalscore-sum(n-k) subarray ele.
+
+
+6. Find All Anagrams in a String:
+---------------------------------
+Given two strings s and p, return an array of all the start indices of p's anagrams in s. You may return the answer in any order.
+
+Example 1:
+Input: s = "cbaebabacd", p = "abc"
+Output: [0,6]
+Explanation:
+The substring with start index = 0 is "cba", which is an anagram of "abc".
+The substring with start index = 6 is "bac", which is an anagram of "abc".
+
+Example 2:
+Input: s = "abab", p = "ab"
+Output: [0,1,2]
+Explanation:
+The substring with start index = 0 is "ab", which is an anagram of "ab".
+The substring with start index = 1 is "ba", which is an anagram of "ab".
+The substring with start index = 2 is "ab", which is an anagram of "ab".
+ 
+Constraints:
+1 <= s.length, p.length <= 3 * 104
+s and p consist of lowercase English letters.
+
+
+//take the window of len of p and check if freq of the window elements of s and freq of p matches. If yes append the indx to res and go ahead and inc i and dec j and update freq and check until j<s.size()
+
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        if (s.size() < p.size()) return {};
+        vector<int> freqS(26, 0);
+        vector<int> freqP(26, 0);
+        vector<int> res;
+
+        for (auto c: p) {
+            freqP[c-'a']++;
+        }
+
+        int n=s.size();
+        int i=0;
+        int j=0;
+
+        while(j < p.size()) {
+            freqS[s[j] - 'a']++;
+            j++;
+        }
+        while(j < n) {
+            if (freqS == freqP) {
+                res.push_back(i);
+            } 
+            freqS[s[j] - 'a']++;
+            freqS[s[i] - 'a']--;
+            i++;
+            j++;
+        }
+
+        if (freqS == freqP) {
+                res.push_back(i);
+        } 
+        return res;
+    }
+};
