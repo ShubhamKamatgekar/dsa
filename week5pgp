@@ -1,3 +1,49 @@
+1. Two Sum - Pair with Given Sum:
+---------------------------------
+Given an array arr[] of integers and another integer target. Determine if there exist two distinct indices such that the sum of their elements is equal to the target.
+
+Examples:
+
+Input: arr[] = [0, -1, 2, -3, 1], target = -2
+Output: true
+Explanation: arr[3] + arr[4] = -3 + 1 = -2
+
+Input: arr[] = [1, -2, 1, 0, 5], target = 0
+Output: false
+Explanation: None of the pair makes a sum of 0
+
+Input: arr[] = [11], target = 11
+Output: false
+Explanation: No pair is possible as only one element is present in arr[]
+
+Constraints:
+1 ≤ arr.size ≤ 105
+-105 ≤ arr[i] ≤ 105
+-2*105 ≤ target ≤ 2*105
+
+Expected Complexities
+Time Complexity: O(n)
+Auxiliary Space: O(n)
+
+//for o(n) t.c we need hashmap. To solve via pointers we need to sort the array O(nlogn)
+class Solution {
+  public:
+    bool twoSum(vector<int>& arr, int target) {
+        // code here
+        unordered_map<int, bool> mp;
+        for (int i=0; i<arr.size(); i++) {
+            //cout<<target-arr[i]<<endl;
+            if (mp[target-arr[i]]) return true;
+            mp[arr[i]] = true;
+        }
+        
+        return false;
+    }
+};
+
+
+
+
 4. Longest Substring Without Repeating Characters:
 ---------------------------------------------------
 Given a string s, find the length of the longest substring without duplicate characters.
@@ -512,6 +558,82 @@ public:
         return Atmost(nums, k) - Atmost(nums, k-1);
     }
 };
+
+15. Minimum Window Substring:
+--------------------------------
+Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "".
+
+The testcases will be generated such that the answer is unique.
+
+Example 1:
+Input: s = "ADOBECODEBANC", t = "ABC"
+Output: "BANC"
+Explanation: The minimum window substring "BANC" includes 'A', 'B', and 'C' from string t.
+
+Example 2:
+Input: s = "a", t = "a"
+Output: "a"
+Explanation: The entire string s is the minimum window.
+
+Example 3:
+Input: s = "a", t = "aa"
+Output: ""
+Explanation: Both 'a's from t must be included in the window.
+Since the largest window of s only has one 'a', return empty string.
+
+Constraints:
+m == s.length
+n == t.length
+1 <= m, n <= 105
+s and t consist of uppercase and lowercase English letters.
+ 
+Follow up: Could you find an algorithm that runs in O(m + n) time?
+
+//belongs to sliding window. In orer to track the substring  of s with all char of t present, we will need to have a freq map to store the char count of chars of t present in substring of s.
+//update the freq map with char count of t also inc vr count. (Now all other char frew except those present in t will be 0). Now inc the window and dec the freq count of each char present at j indx. if the jth indx char is present in t dec value of count.
+//Now if count becomes 0,run while loop until count remains 0, update the minlen and startindx if curr substr of s is min substr to have al the chars, shrink the size and see if count is 0 , if any non t char present dont inc count, just inc count if char o t present at i while shrinking window.
+//return the min string using startIndx and minlen.
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int n = s.size();
+
+        if (n < t.size()) return  "";
+        int i=0;
+        int j=0;
+        int count = t.size();
+        int startIdx = 0;
+
+        vector<int> freqT(128, 0);
+
+        for (auto c : t) freqT[c]++;
+
+        int minLen = INT_MAX;
+
+        while (j < n) {
+            if (freqT[s[j]] > 0) {
+                count--;
+            }
+            freqT[s[j]]--;
+        
+            while(count == 0) {
+                if (minLen > (j-i+1)) {
+                    minLen = j-i+1;
+                    startIdx = i;
+                }
+                if (freqT[s[i]] == 0) count++;
+                freqT[s[i]]++;
+                i++;
+            }
+
+            j++;
+        }
+
+        return (minLen == INT_MAX) ? "":s.substr(startIdx, minLen);
+    }
+};
+
 
 
 16.  Longest Substring with At Most K Distinct Characters:
