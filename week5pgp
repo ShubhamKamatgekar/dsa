@@ -352,6 +352,56 @@ public:
 };
 
 
+12. Container With Most Water:
+------------------------------
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return the maximum amount of water a container can store.
+
+Notice that you may not slant the container.
+
+Example 1:
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+
+Example 2:
+Input: height = [1,1]
+Output: 1
+ 
+Constraints:
+n == height.length
+2 <= n <= 105
+0 <= height[i] <= 104
+
+// we know that area = l*b, for container with one end height[i] and other with height[j], for it not to overflow the water, we can only fill upto the min among these two
+//so here the amt of water a container can hold = min(height[i], height[j]) * (j-i) [width]. Have two pointers one i at 0 indx ad j at last indx. get the min among those and mutiply with dist btw them i.e j-i. If this amt is max update the maxamt
+//for the next iteration in order to get max amt we need to have max height so dec either i or inc j depending on which heght is min. If both are same dec i and inc j and continue until i<j
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int i = 0;
+        int j = height.size()-1;
+        int maxWater = 0;
+        while (i < j) {
+            maxWater = max(maxWater, min(height[i], height[j]) * (j-i));
+            if (height[i] < height[j]) {
+                i++;
+            } else if (height[i] == height[j]) {
+                i++;
+                j--;
+            } else {
+                j--;
+            }
+        }
+
+        return maxWater;
+    }
+};
+
+
 16.  Longest Substring with At Most K Distinct Characters:
 ----------------------------------------------------------
 Asked in companies - Goldman, Amazon, Uber, Google, Airbnb
