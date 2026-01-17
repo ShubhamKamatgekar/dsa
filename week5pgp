@@ -350,3 +350,87 @@ public:
         return maxLen;
     }
 };
+
+
+16.  Longest Substring with At Most K Distinct Characters:
+----------------------------------------------------------
+Asked in companies - Goldman, Amazon, Uber, Google, Airbnb
+Problem statement
+You are given a string 'str' and an integer ‘K’. Your task is to find the length of the largest substring with at most ‘K’ distinct characters.
+
+For example:
+You are given ‘str’ = ‘abbbbbbc’ and ‘K’ = 2, then the substrings that can be formed are [‘abbbbbb’, ‘bbbbbbc’]. Hence the answer is 7.
+Detailed explanation ( Input/output format, Notes, Images )
+
+Constraints:
+1 <= T <= 10
+1 <= K <= 26
+1 <= |str| <= 10^6
+
+The string str will contain only lowercase alphabets.    
+
+Time Limit: 1 sec
+Note: You do not need to print anything. It has already been taken care of. Just implement the function.
+
+Sample Input 1:
+2
+2
+abbbbbbc
+3
+abcddefg
+Sample Output 1:
+7
+4
+Explanation:
+For the first test case, ‘str’ = ‘abbbbbbc’ and ‘K’ = 2, then the substrings that can be formed are [‘abbbbbb’, ‘bbbbbbc’]. Hence the answer is 7.
+For the second test case, ‘str’ = ‘abcddefg’ and ‘K’ = 3, then the substrings that can be formed is [‘cdde’, ‘ddef’]. Hence the answer is 4.
+
+Sample Input 2:
+2
+3
+aaaaaaaa
+1
+abcefg
+Sample Output 2:
+8   
+1   
+
+Hints:
+1. Try to think of a brute force approach.
+2. Try to think of a two-pointer solution.
+
+//can be solved with sliding window approach. Create a map to store the freq of char in the window, if map size is > k, shrink the window  from start until map size is reduced. Update the maxLen if map size <= k.
+
+#include<unordered_map>
+#include<climits>
+
+int kDistinctChars(int k, string &str)
+{
+    // Write your code here
+    unordered_map<char, int> freq;
+
+    int start = 0;
+    int end = 0;
+    int startIdx = 0;
+    int maxLen = INT_MIN;
+
+    while (end < str.size()) {
+        freq[str[end]]++;
+
+        while (freq.size() > k) {
+            freq[str[start]]--;
+            if (freq[str[start]] == 0) freq.erase(str[start]);
+            start++;
+        }
+
+        if ((end-start+1) > maxLen) {
+            maxLen = (end-start+1);
+            startIdx = start; //if asked for returning string
+        }
+
+        end++;
+    }
+
+    return maxLen;
+}
+
